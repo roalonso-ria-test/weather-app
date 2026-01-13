@@ -1,11 +1,19 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useCityForecastData } from "./composables/useCityData";
+import { ref } from "vue";
+
+const city = ref<"rio" | "beijing" | "los-angeles">("rio");
+const { data } = useCityForecastData(city);
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <select v-model="city">
+    <option value="rio">Rio de Janeiro</option>
+    <option value="beijing">Beijing</option>
+    <option value="los-angeles">Los Angeles</option>
+  </select>
+  <pre>{{ city }}</pre>
+  <pre>{{ data }}</pre>
 </template>
 
 <style scoped></style>
