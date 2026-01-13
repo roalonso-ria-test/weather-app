@@ -1,4 +1,5 @@
 import { useForecast } from "@/api/composables/useForecast";
+import type { TransformedForecastData } from "@/types/TransformedForecastData";
 import { computed, toValue, type MaybeRef } from "vue";
 
 const citiesCoordinates = {
@@ -10,11 +11,13 @@ const citiesCoordinates = {
 export const useCityForecastData = (city: MaybeRef<"rio" | "beijing" | "los-angeles">) => {
   const lat = computed(() => citiesCoordinates[toValue(city)].lat);
   const lon = computed(() => citiesCoordinates[toValue(city)].lon);
-  return useForecast({
+  return useForecast<TransformedForecastData>({
     lat,
     lon,
     select: (data) => {
-      return data;
+      const nextHours = [];
+      const nextDays = [];
+      return { nextHours, nextDays };
     },
   });
 };
