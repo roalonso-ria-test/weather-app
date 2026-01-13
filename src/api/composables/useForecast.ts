@@ -1,14 +1,16 @@
 import { useQuery } from "@tanstack/vue-query";
 import { toValue, type MaybeRef } from "vue";
+import type { Forecast } from "../types/Forecast";
 
 export function useForecast(lat: MaybeRef<number>, lon: MaybeRef<number>) {
-  return useQuery({
+  return useQuery<Forecast>({
     queryKey: ["forecast", lat, lon],
     queryFn: async () => {
       const params = new URLSearchParams({
         appid: import.meta.env.VITE_OPENWEATHER_API_KEY,
         lat: toValue(lat).toString(),
         lon: toValue(lon).toString(),
+        units: "metric",
       });
       const url = `https://api.openweathermap.org/data/2.5/weather?${params}`;
       const response = await fetch(url);
