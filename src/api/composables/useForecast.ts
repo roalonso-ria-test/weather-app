@@ -18,7 +18,7 @@ export function useForecast<T>({ lat, lon, select }: UseForecastOptions<T>) {
         lon: toValue(lon).toString(),
         units: "metric",
       });
-      const url = computed(() => `https://api.openweathermap.org/data/2.5/weather?${params}`);
+      const url = computed(() => `https://api.openweathermap.org/data/2.5/forecast?${params}`);
       const response = await fetch(toValue(url));
       if (!response.ok) {
         throw new Error("Network response was not ok");
