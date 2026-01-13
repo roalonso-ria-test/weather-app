@@ -15,8 +15,26 @@ export const useCityForecastData = (city: MaybeRef<"rio" | "beijing" | "los-ange
     lat,
     lon,
     select: (data) => {
-      const nextHours = [];
-      const nextDays = [];
+      const nextHours = data.list.slice(0, 5).map((item) => ({
+        hour: new Date(item.dt * 1000).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        temperature: item.main.temp,
+        humidity: item.main.humidity,
+        weatherIcon: item.weather.icon,
+      }));
+      const nextDays = data.list.slice(0, 5).map((item) => ({
+        displayDate: new Date(item.dt * 1000).toLocaleDateString([], {
+          month: "short",
+          day: "numeric",
+          weekday: "short",
+        }),
+        minTemperature: item.main.temp_min,
+        maxTemperature: item.main.temp_max,
+        weatherDescription: item.weather.description,
+        weatherIcon: item.weather.icon,
+      }));
       return { nextHours, nextDays };
     },
   });

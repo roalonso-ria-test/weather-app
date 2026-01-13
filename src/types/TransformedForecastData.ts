@@ -2,11 +2,11 @@ export type TransformedForecastData = {
   nextHours: {
     hour: string;
     temperature: number;
-    weatherDescription: string;
+    humidity: number;
     weatherIcon: string;
   }[];
   nextDays: {
-    date: string;
+    displayDate: string;
     minTemperature: number;
     maxTemperature: number;
     weatherDescription: string;
