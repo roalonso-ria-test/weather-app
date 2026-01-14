@@ -4,15 +4,18 @@ import { useCityForecastData } from "./composables/useCityData";
 import { ref } from "vue";
 
 const city = ref<"rio" | "beijing" | "los-angeles">("rio");
-const { data, isPending } = useCityForecastData(city);
+const { data, isPending, refetch } = useCityForecastData(city);
 </script>
 
 <template>
-  <select v-model="city">
-    <option value="rio">Rio de Janeiro</option>
-    <option value="beijing">Beijing</option>
-    <option value="los-angeles">Los Angeles</option>
-  </select>
+  <div>
+    <select v-model="city">
+      <option value="rio">Rio de Janeiro</option>
+      <option value="beijing">Beijing</option>
+      <option value="los-angeles">Los Angeles</option>
+    </select>
+    <button :click="refetch">Refresh</button>
+  </div>
   <div v-if="isPending">Loading...</div>
   <div v-else-if="!data">Something went wrong.</div>
   <MainSection v-else :data="data" />
