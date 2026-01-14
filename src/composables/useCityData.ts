@@ -15,7 +15,7 @@ export const useCityForecastData = (city: MaybeRef<"rio" | "beijing" | "los-ange
     lat,
     lon,
     select: (data) => {
-      const nextHours = data.list.slice(0, 5).map((item) => ({
+      const nextHours = data.list.slice(0, 8).map((item) => ({
         hour: new Date(item.dt * 1000).toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
@@ -24,17 +24,40 @@ export const useCityForecastData = (city: MaybeRef<"rio" | "beijing" | "los-ange
         humidity: item.main.humidity,
         weatherIcon: item.weather.icon,
       }));
-      const nextDays = data.list.slice(0, 5).map((item) => ({
-        displayDate: new Date(item.dt * 1000).toLocaleDateString([], {
+
+      const dataByDate: Record<string, typeof data.list> = {};
+      data.list.forEach((item) => {
+        const today = new Date().toLocaleDateString(undefined, {
           month: "short",
           day: "numeric",
           weekday: "short",
-        }),
-        minTemperature: item.main.temp_min,
-        maxTemperature: item.main.temp_max,
-        weatherDescription: item.weather.description,
-        weatherIcon: item.weather.icon,
-      }));
+        });
+        const date = new Date(item.dt * 1000).toLocaleDateString(undefined, {
+          month: "short",
+          day: "numeric",
+          weekday: "short",
+        });
+
+        if (date === today) {
+          return;
+        }
+
+        if (!dataByDate[date]) {
+          dataByDate[date] = [];
+        }
+        dataByDate[date].push(item);
+      });
+
+      const nextDays = Object.entries(dataByDate).map(([displayDate, data]) => {
+        return {
+          displayDate,
+          minTemperature: Math.min(...data.map((item) => item.main.temp_min)),
+          maxTemperature: Math.max(...data.map((item) => item.main.temp_max)),
+          weatherDescription: data[0]!.weather.description,
+          weatherIcon: data[0]!.weather.icon,
+        };
+      });
+
       return { nextHours, nextDays };
     },
   });
